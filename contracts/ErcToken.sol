@@ -8,15 +8,12 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
 contract MyERCToken is ERC20, Pausable, Ownable {
-    // mapping(address => uint256) internal _balances;
-
     constructor(
-        // uint8 _decimals,
         uint256 initialSupply,
         string memory name,
         string memory symbol
     ) ERC20(name, symbol) {
-        // _mint(msg.sender, initialSupply);
-        _mint(msg.sender, initialSupply * (10**decimals()));
+        _mint(msg.sender, initialSupply);
+        _balances[msg.sender] = initialSupply;
     }
 }
