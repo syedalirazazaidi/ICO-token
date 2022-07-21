@@ -16,4 +16,17 @@ contract MyERCToken is ERC20, Pausable, Ownable {
         _mint(msg.sender, initialSupply);
         _balances[msg.sender] = initialSupply;
     }
+
+    function _transfer(address to, uint256 value)
+        internal
+        virtual
+        returns (bool)
+    {
+        require(to != address(0), "ERC20: to address is not valid");
+        require(value <= _balances[msg.sender], "ERC20: insufficient balance");
+        _balances[msg.sender] = _balances[msg.sender] - value;
+        _balances[to] = _balances[to] + value;
+        emit Transfer(msg.sender, to, value);
+        return true;
+    }
 }
