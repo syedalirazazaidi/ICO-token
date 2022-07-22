@@ -27,7 +27,7 @@ describe("Transfer token", function () {
   const tokenName = "ERCtoken";
   const tokenSymbol = "TKN";
   const tokenTotalSupply = 10000;
-  it.only("Should transfer tokens between accounts", async function () {
+  it("Should transfer tokens between accounts", async function () {
     const [owner, addr1, addr2]: SignerWithAddress[] =
       await ethers.getSigners();
     const ErcToken = await ethers.getContractFactory("MyERCToken");
@@ -50,5 +50,23 @@ describe("Transfer token", function () {
     await expect(
       ercToken.connect(addr1).transfer(addr2.address, "10000000")
     ).to.be.revertedWith("ERC20: insufficient balance");
+  });
+});
+describe.only("balanceOf.test", function () {
+  const tokenName = "ERCtoken";
+  const tokenSymbol = "TKN";
+  const tokenTotalSupply = 10000;
+  it("balanceOf success", async function () {
+    const [owner, addr1]: SignerWithAddress[] = await ethers.getSigners();
+    const ErcToken = await ethers.getContractFactory("MyERCToken");
+    const ercToken = await ErcToken.deploy(
+      tokenTotalSupply,
+      tokenName,
+      tokenSymbol
+    );
+    await ercToken.deployed();
+    const initialOwnerBalance = await ercToken.balanceOf(owner.address);
+    const finalOwnerBalance = await ercToken.balanceOf(owner.address);
+    expect(finalOwnerBalance).to.equal(10000);
   });
 });
