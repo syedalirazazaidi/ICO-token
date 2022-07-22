@@ -43,11 +43,12 @@ describe("Transfer token", function () {
     await ercToken.connect(addr1).transfer(addr2.address, 50);
     const addr2Balance = await ercToken.balanceOf(addr2.address);
     expect(addr2Balance).to.equal(50);
+    await expect(
+      ercToken.transfer("0x0000000000000000000000000000000000000000", 1000)
+    ).to.be.revertedWith("ERC20: to address is not valid");
 
-    // const initialOwnerBalance = await ercToken.balanceOf(owner.address);
-    // console.log(initialOwnerBalance);
-    await expect(ercToken.transfer(owner.address, 1)).to.be.revertedWith(
-      "ERC20: to address is not valid"
-    );
+    await expect(
+      ercToken.connect(addr1).transfer(addr2.address, "10000000")
+    ).to.be.revertedWith("ERC20: insufficient balance");
   });
 });

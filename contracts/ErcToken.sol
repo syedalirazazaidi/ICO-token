@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
+// import "./interfaces/IERC20.sol";
 // Import this file to use console.log
 import "hardhat/console.sol";
 
@@ -17,16 +17,20 @@ contract MyERCToken is ERC20, Pausable, Ownable {
         _balances[msg.sender] = initialSupply;
     }
 
-    function _transfer(address to, uint256 value)
-        internal
+    function transfer(address _to, uint256 _value)
+        public
         virtual
+        override
         returns (bool)
     {
-        require(to != address(0), "ERC20: to address is not valid");
-        require(value <= _balances[msg.sender], "ERC20: insufficient balance");
-        _balances[msg.sender] = _balances[msg.sender] - value;
-        _balances[to] = _balances[to] + value;
-        emit Transfer(msg.sender, to, value);
+        require(_to != address(0), "ERC20: to address is not valid");
+        require(_value <= _balances[msg.sender], "ERC20: insufficient balance");
+
+        _balances[msg.sender] = _balances[msg.sender] - _value;
+        _balances[_to] = _balances[_to] + _value;
+
+        emit Transfer(msg.sender, _to, _value);
+
         return true;
     }
 }
