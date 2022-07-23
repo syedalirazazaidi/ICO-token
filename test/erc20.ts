@@ -1,3 +1,4 @@
+import { Address } from "cluster";
 import { ethers } from "hardhat";
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -52,7 +53,7 @@ describe("Transfer token", function () {
     ).to.be.revertedWith("ERC20: insufficient balance");
   });
 });
-describe.only("balanceOf.test", function () {
+describe("balanceOf.test", function () {
   const tokenName = "ERCtoken";
   const tokenSymbol = "TKN";
   const tokenTotalSupply = 10000;
@@ -68,5 +69,25 @@ describe.only("balanceOf.test", function () {
     const initialOwnerBalance = await ercToken.balanceOf(owner.address);
     const finalOwnerBalance = await ercToken.balanceOf(owner.address);
     expect(finalOwnerBalance).to.equal(10000);
+  });
+});
+describe.only("Approval Function.test", function () {
+  const tokenName = "ERCtoken";
+  const tokenSymbol = "TKN";
+  const tokenTotalSupply = 10000;
+  it("owner approve ethe amount to addr1 to spend", async function () {
+    const [owner, addr1]: SignerWithAddress[] = await ethers.getSigners();
+    const ErcToken = await ethers.getContractFactory("MyERCToken");
+    const ercToken = await ErcToken.deploy(
+      tokenTotalSupply,
+      tokenName,
+      tokenSymbol
+    );
+    await ercToken.deployed();
+
+    // await ercToken.approve(addr1.address, 1000);
+    expect(await ercToken.approve(addr1.address, 15))
+      .to.emit(ercToken, "Approv-al")
+      .withArgs(owner.address, addr1.address, 30);
   });
 });

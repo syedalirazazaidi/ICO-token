@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
 contract MyERCToken is ERC20, Pausable, Ownable {
+    mapping(address => mapping(address => uint256)) private _allowances;
+
     constructor(
         uint256 initialSupply,
         string memory name,
@@ -41,5 +43,20 @@ contract MyERCToken is ERC20, Pausable, Ownable {
         returns (uint256)
     {
         return _balances[account];
+    }
+
+    function approve(address spender, uint256 amount)
+        public
+        virtual
+        override
+        returns (bool)
+    {
+        address owner = _msgSender();
+        require(owner != address(0), "ERC20: approve from the zero address");
+        require(spender != address(0), "ERC20: approve to the zero address");
+
+        _allowances[owner][spender] = amount;
+        emit Approval(owner, spender, amount);
+        return true;
     }
 }
