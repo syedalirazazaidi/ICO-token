@@ -59,4 +59,28 @@ contract MyERCToken is ERC20, Pausable, Ownable {
         emit Approval(owner, spender, amount);
         return true;
     }
+
+    function transferFrom(
+        address _from,
+        address _to,
+        uint256 _value
+    ) public virtual override returns (bool) {
+        require(_from != address(0), "ERC20: from address is not valid");
+        require(_to != address(0), "ERC20: to address is not valid");
+        require(_value <= _balances[_from], "ERC20: insufficient balance");
+        require(
+            _value <= _allowances[_from][msg.sender],
+            "ERC20: transfer from value not allowed"
+        );
+
+        _allowances[_from][msg.sender] =
+            _allowances[_from][msg.sender] -
+            _value;
+        _balances[_from] = _balances[_from] - _value;
+        _balances[_to] = _balances[_to] + _value;
+
+        emit Transfer(_from, _to, _value);
+
+        return true;
+    }
 }

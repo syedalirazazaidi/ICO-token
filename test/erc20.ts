@@ -71,7 +71,7 @@ describe("balanceOf.test", function () {
     expect(finalOwnerBalance).to.equal(10000);
   });
 });
-describe.only("Approval Function.test", function () {
+describe("Approval Function.test", function () {
   const tokenName = "ERCtoken";
   const tokenSymbol = "TKN";
   const tokenTotalSupply = 10000;
@@ -88,6 +88,26 @@ describe.only("Approval Function.test", function () {
     // await ercToken.approve(addr1.address, 1000);
     expect(await ercToken.approve(addr1.address, 15))
       .to.emit(ercToken, "Approv-al")
+      .withArgs(owner.address, addr1.address, 30);
+  });
+});
+describe.only("Transfer from Function.test", function () {
+  const tokenName = "ERCtoken";
+  const tokenSymbol = "TKN";
+  const tokenTotalSupply = 10000;
+  it("owner approve ethe amount to addr1 to spend", async function () {
+    const [owner, addr1]: SignerWithAddress[] = await ethers.getSigners();
+    const ErcToken = await ethers.getContractFactory("MyERCToken");
+    const ercToken = await ErcToken.deploy(
+      tokenTotalSupply,
+      tokenName,
+      tokenSymbol
+    );
+    await ercToken.deployed();
+
+    // await ercToken.approve(addr1.address, 1000);
+    expect(await ercToken.approve(addr1.address, 15))
+      .to.emit(ercToken, "Transfer")
       .withArgs(owner.address, addr1.address, 30);
   });
 });
