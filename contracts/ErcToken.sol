@@ -78,7 +78,6 @@ contract MyERCToken is ERC20, Pausable, Ownable {
             _value;
         _balances[_from] = _balances[_from] - _value;
         _balances[_to] = _balances[_to] + _value;
-
         emit Transfer(_from, _to, _value);
 
         return true;
